@@ -13,18 +13,20 @@ device  = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 #hyper parameters
 input_size = 784 #images are 28x28
-hidden_size = 5000 #can try out more
+hidden_size = 500 #can try out more
 num_classes = 10
-num_epochs = 5
+num_epochs = 10
 batch_size = 100
 leraning_rate = 0.001
 
+transform = transforms.Compose([transforms.ToTensor(),
+                               transforms.Normalize((0.1307,),(0.3081,))])
 #import MNIST data
 train_dataset = torchvision.datasets.MNIST(root='./data', train=True,
-                                          transform = transforms.ToTensor(), download=True)
+                                          transform = transform, download=True)
 
 test_dataset = torchvision.datasets.MNIST(root='./data', train=False,
-                                         transform = transforms.ToTensor(), download=True)
+                                         transform = transform, download=True)
 
 train_loader = torch.utils.data.DataLoader(dataset = train_dataset, batch_size = batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset = test_dataset, batch_size = batch_size, shuffle=False)
@@ -130,8 +132,10 @@ with torch.no_grad():
         
     acc = 100.0 * n_correct/n_samples
     print(f'accuracy = {acc}')
-        
-        
+    
+    
+    torch.save(model.state_dict(), "mnist_ffn.pth")
+    
         
         
         
